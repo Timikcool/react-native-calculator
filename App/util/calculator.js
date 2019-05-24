@@ -3,10 +3,11 @@ export const initialState = {
   operator: null,
   previousValue: null,
   history: [],
-  operationNumber: 0
+  operationNumber: 0,
+  isSidemenuOpen: false
 };
 
-export const handleNumber = (value, state) => {
+const handleNumber = (value, state) => {
   if (state.currentValue === '0') {
     return { currentValue: `${value}` };
   }
@@ -16,11 +17,14 @@ export const handleNumber = (value, state) => {
   };
 };
 
-export const handleEqual = state => {
-  const { currentValue, previousValue, operator } = state;
+function handleEqual(state) {
+  const { currentValue, previousValue, operator, history } = state;
+
+  //const currentValue = state.currentValue;
 
   const current = parseFloat(currentValue);
   const previous = parseFloat(previousValue);
+
   const resetState = {
     operator: null,
     previousValue: null
@@ -30,7 +34,7 @@ export const handleEqual = state => {
     const currentValue = previous / current;
     return {
       currentValue,
-      history: [...state.history, currentValue],
+      history: [...history, currentValue],
       operationNumber: ++state.operationNumber,
       ...resetState
     };
@@ -67,7 +71,7 @@ export const handleEqual = state => {
   }
 
   return state;
-};
+}
 
 const calculator = (type, value, state) => {
   switch (type) {
@@ -82,7 +86,7 @@ const calculator = (type, value, state) => {
     case 'equal':
       return handleEqual(state);
     case 'clear':
-      return initialState;
+      return { ...initialState, history: state.history };
     case 'posneg':
       return {
         currentValue: `${parseFloat(state.currentValue) * -1}`
@@ -93,28 +97,41 @@ const calculator = (type, value, state) => {
       };
     case 'sin':
       return {
-        currentValue: `${Math.sin(parseFloat(state.currentValue))}`
+        currentValue: `${Math.round(
+          Math.sin(parseFloat(state.currentValue) * (Math.PI / 180))
+        )}`
       };
     case 'cos':
       return {
-        currentValue: `${Math.cos(parseFloat(state.currentValue))}`
+        currentValue: `${Math.round(
+          Math.cos(parseFloat(state.currentValue) * (Math.PI / 180))
+        )}`
       };
     case 'tan':
       return {
-        currentValue: `${Math.tan(parseFloat(state.currentValue))}`
+        currentValue: `${Math.round(
+          Math.tan(parseFloat(state.currentValue) * (Math.PI / 180))
+        )}`
       };
     case 'atan':
       return {
-        currentValue: `${Math.atan(parseFloat(state.currentValue))}`
+        currentValue: `${Math.round(
+          Math.atan(parseFloat(state.currentValue) * (Math.PI / 180))
+        )}`
       };
     case 'asin':
       return {
-        currentValue: `${Math.asin(parseFloat(state.currentValue))}`
+        currentValue: `${Math.round(
+          Math.asin(parseFloat(state.currentValue) * (Math.PI / 180))
+        )}`
       };
     case 'acos':
       return {
-        currentValue: `${Math.acos(parseFloat(state.currentValue))}`
+        currentValue: `${Math.round(
+          Math.acos(parseFloat(state.currentValue) * (Math.PI / 180))
+        )}`
       };
+    //radians
     case 'log':
       return {
         currentValue: `${Math.log(parseFloat(state.currentValue))}`
